@@ -26,6 +26,10 @@ const UserSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  likedRecipes: {
+    type: Array,
+    default: [],
+  },
 });
 
 module.exports = mongoose.model('user', UserSchema);

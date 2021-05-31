@@ -1,8 +1,13 @@
 const mongoose = require('mongoose');
+const moment = require('moment');
 
 const RecipeSchema = mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: 'users',
+  },
+  firstName: {
+    type: mongoose.Schema.Types.String,
     ref: 'users',
   },
   meal: {
@@ -15,7 +20,6 @@ const RecipeSchema = mongoose.Schema({
   },
   prepMethod: {
     type: String,
-    required: true,
   },
   description: {
     type: String,
@@ -37,8 +41,8 @@ const RecipeSchema = mongoose.Schema({
     required: true,
   },
   date: {
-    type: Date,
-    default: Date.now,
+    type: Object,
+    default: moment().format('MMM Do YYYY'),
   },
 });
 

@@ -4,8 +4,48 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator');
+const auth = require('../middleware/auth');
 
 const User = require('../models/User');
+
+//@route    PUT api/recipes/:id
+// @desc    Update Recipe
+// @access  Private
+router.put('/:id', async (req, res) => {
+  const { userName, firstName, lastName, email, password, likedRecipes } =
+    req.body;
+
+  //Build contact object
+  const userFields = {};
+  if (userName) userFields.userName = userName;
+  if (firstName) userFields.firstName = firstName;
+  if (lastName) userFields.lastName = lastName;
+  if (email) userFields.email = email;
+  if (password) userFields.password = password;
+  if (likedRecipes) userFields.likedRecipes = likedRecipes;
+
+  try {
+    let user = await User.findById(req.params.id);
+
+    if (!user) return res.status(404).json({ msg: 'User not found' });
+
+    //Make sure user cannot update anyone elses info
+    // if (user.toString() !== req.user.id) {
+    //   return res.status(401).json({ msg: 'Not authorized' });
+    // }
+
+    user = await User.findByIdAndUpdate(
+      req.params.id,
+      { $set: userFields },
+      { new: true },
+    );
+
+    res.json(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error...');
+  }
+});
 
 //@route POST api/users
 // @desc Resister a user
@@ -27,7 +67,8 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { userName, firstName, lastName, email, password } = req.body;
+    const { userName, firstName, lastName, email, password, likedRecipes } =
+      req.body;
 
     try {
       let username = await User.findOne({ userName });
@@ -48,6 +89,7 @@ router.post(
         lastName,
         email,
         password,
+        likedRecipes,
       });
 
       const salt = await bcrypt.genSalt(10);

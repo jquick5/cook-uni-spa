@@ -1,0 +1,8 @@
+
+Fix Slider
+Blur background on every page except form landing
+Fix likesCounter
+Enable views based on user prefrence via radio input: All Recipes | My Recipes | Loved Recipes
+Add image upload option
+Add Forgot Password functionality
+Fix Footer

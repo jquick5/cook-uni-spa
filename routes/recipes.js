@@ -69,7 +69,7 @@ router.post(
 );
 
 //@route    PUT api/recipes/:id
-// @desc    Add new recipe
+// @desc    Update Recipe
 // @access  Private
 router.put('/:id', auth, async (req, res) => {
   const {
